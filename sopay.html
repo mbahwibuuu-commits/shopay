@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+<title>Top Up Saldo ShopeePay - Driver</title>
+    <style>
+        /* Gaya Dasar */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding-top: 60px; /* Ruang untuk Navbar */
+        }
+
+        /* Tema Warna Orange ala ShopeeFood */
+        :root {
+            --shopeefood-orange: #EE4D2D;
+            --shopeefood-light-orange: #FF7043;
+            --shopeefood-dark-orange: #CC3D20;
+            --delete-red: #D9534F; /* Warna merah untuk tombol hapus */
+        }
+
+        /* Navbar (Menu Home) */
+        .navbar {
+            background-color: var(--shopeefood-orange);
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .navbar a {
+            color: white;
+            padding: 15px 20px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .navbar a:hover {
+            background-color: var(--shopeefood-dark-orange);
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        h2 {
+            color: var(--shopeefood-orange);
+            margin-bottom: 25px;
+            font-size: 1.5em;
+        }
+
+        /* Gaya Input & Terbilang */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--shopeefood-light-orange);
+            outline: none;
+        }
+
+        #terbilang {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #ffebee;
+            border: 1px dashed var(--shopeefood-light-orange);
+            border-radius: 5px;
+            font-style: italic;
+            color: #555;
+            min-height: 20px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        
+        /* Gaya Info Admin Baru */
+        #admin-info {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #fff8e1; /* Warna kuning muda */
+            border: 1px solid #ffcc80; /* Garis oranye lembut */
+            border-radius: 5px;
+            font-size: 0.95em;
+            color: #616161;
+            text-align: center;
+        }
+        #admin-info strong {
+            color: var(--shopeefood-dark-orange);
+        }
+
+
+        /* Gaya Tombol Utama */
+        .main-button {
+            background-color: var(--shopeefood-orange);
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            width: 100%;
+            transition: background-color 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .main-button:hover {
+            background-color: var(--shopeefood-dark-orange);
+        }
+
+        /* History Section */
+        #history-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border-radius: 10px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            text-align: left;
+        }
+        #history-section h3 {
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        #history-list {
+            list-style: none;
+            padding: 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        #history-list li {
+            padding: 8px 0;
+            border-bottom: 1px dotted #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+        }
+        #history-list li:last-child {
+            border-bottom: none;
+        }
+        
+        /* Gaya Total Saldo Baru */
+        #total-saldo {
+            margin-top: 20px;
+            padding: 15px;
+            border-top: 2px solid var(--shopeefood-dark-orange);
+            background-color: #fff3e0;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--shopeefood-dark-orange);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #total-saldo span {
+            color: #333;
+        }
+
+        /* Tombol Hapus Semua */
+        #clear-history-btn {
+            background-color: #ccc;
+            color: #333;
+            padding: 10px 15px;
+            margin-top: 15px;
+            font-size: 0.9em;
+            /* Menggunakan gaya tombol utama agar konsisten, tapi warna berbeda */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        #clear-history-btn:hover {
+            background-color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="index.html"><i class="fa-solid fa-home"></i> Home</a>
+    </div>
+    <div class="container">
+        <h2><i class="fa-solid fa-wallet"></i> Top-Up ShopeePay-Driver<i class="fa-solid fa-wallet"></i> </h2>
+        
+        <div class="input-group">
+            <label for="nominal">Nominal Top Up (Rupiah)</label>
+            <input type="number" id="nominal" placeholder="Contoh: 50000" min="5000" oninput="updateTerbilang()" required>
+            <div id="terbilang">-</div>
+        </div>
+
+        <div id="admin-info">
+            Biaya Admin: <strong id="admin-fee-display">Rp 0</strong>. Total Pembayaran: <strong id="total-payment-display">Rp 0</strong>
+        </div>
+        
+        <button class="main-button" onclick="kirimWhatsApp()">
+            Lanjutkan ke Pembayaran via WhatsApp
+        </button>
+
+    </div>
+
+    <div class="container" id="history-section">
+        <h3>Riwayat Top Up</h3>
+        <ul id="history-list">
+            </ul>
+        
+        <div id="total-saldo">
+            <span>Total Saldo Riwayat</span>
+            <span id="saldo-value">Rp 0</span>
+        </div>
+        
+        <button id="clear-history-btn" onclick="clearHistory()">Hapus Semua Riwayat</button>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'shopeepay_topup_history';
+        const MIN_NOMINAL = 5000; // Minimal nominal top up
+
+        /** Utility Function: Format Rupiah **/
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(number);
+        }
+
+        /** Logic: Hitung Biaya Admin **/
+        function calculateAdminFee(nominal) {
+            if (nominal < MIN_NOMINAL) {
+                return 0;
+            } else if (nominal >= MIN_NOMINAL && nominal <= 50000) {
+                return 1000; // Admin 1000 untuk 5000 - 50.000
+            } else if (nominal >= 51000) {
+                return 2000; // Admin 2000 untuk 51.000 ke atas
+            }
+            return 0;
+        }
+
+        /** Fungsi Konversi Angka ke Terbilang Rupiah **/
+        function terbilang(angka) {
+            if (isNaN(angka) || angka === null || angka === "") return "";
+            angka = Math.floor(angka);
+            
+            const bilangan = [
+                '', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan', 'sepuluh', 'sebelas'
+            ];
+
+            if (angka < 12) {
+                return bilangan[angka];
+            } else if (angka < 20) {
+                return terbilang(angka - 10) + ' belas';
+            } else if (angka < 100) {
+                return terbilang(Math.floor(angka / 10)) + ' puluh ' + terbilang(angka % 10);
+            } else if (angka < 200) {
+                return 'seratus ' + terbilang(angka - 100);
+            } else if (angka < 1000) {
+                return terbilang(Math.floor(angka / 100)) + ' ratus ' + terbilang(angka % 100);
+            } else if (angka < 2000) {
+                return 'seribu ' + terbilang(angka - 1000);
+            } else if (angka < 1000000) {
+                return terbilang(Math.floor(angka / 1000)) + ' ribu ' + terbilang(angka % 1000);
+            } else if (angka < 1000000000) {
+                return terbilang(Math.floor(angka / 1000000)) + ' juta ' + terbilang(angka % 1000000);
+            } else if (angka < 1000000000000) {
+                return terbilang(Math.floor(angka / 1000000000)) + ' milyar ' + terbilang(angka % 1000000000);
+            }
+            return 'Nominal terlalu besar';
+        }
+
+        /** Memperbarui Tulisan Terbilang dan Info Admin saat input berubah **/
+        function updateTerbilang() {
+            const nominalInput = document.getElementById('nominal');
+            const nominal = parseInt(nominalInput.value);
+            const terbilangDiv = document.getElementById('terbilang');
+            const adminFeeDisplay = document.getElementById('admin-fee-display');
+            const totalPaymentDisplay = document.getElementById('total-payment-display');
+            
+            if (nominal && nominal >= MIN_NOMINAL) {
+                const hasilTerbilang = terbilang(nominal).trim();
+                terbilangDiv.innerHTML = `${hasilTerbilang} Rupiah`;
+
+                // Hitung dan tampilkan biaya admin
+                const adminFee = calculateAdminFee(nominal);
+                const totalPayment = nominal + adminFee;
+
+                adminFeeDisplay.textContent = formatRupiah(adminFee);
+                totalPaymentDisplay.textContent = formatRupiah(totalPayment);
+                
+                // Tambahkan validasi minimal nominal ke terbilang
+                nominalInput.min = MIN_NOMINAL;
+
+            } else {
+                terbilangDiv.innerHTML = '-';
+                adminFeeDisplay.textContent = formatRupiah(0);
+                totalPaymentDisplay.textContent = formatRupiah(0);
+                
+                if (nominal > 0 && nominal < MIN_NOMINAL) {
+                    terbilangDiv.innerHTML = `*Minimum top up ${formatRupiah(MIN_NOMINAL)}`;
+                }
+            }
+        }
+
+        /** Menyimpan Riwayat ke Local Storage **/
+        function saveHistory(nominal, adminFee, totalPayment) {
+            const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            const timestamp = new Date().toLocaleString('id-ID', {
+                day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+            
+            const nominalRupiah = formatRupiah(nominal);
+
+            // Simpan nilai nominal sebagai NUMBER
+            history.unshift({
+                id: Date.now(), 
+                nominalRupiah: nominalRupiah,
+                nominalValue: nominal,
+                adminFee: adminFee,
+                totalPayment: totalPayment,
+                time: timestamp
+            });
+
+            // Batasi jumlah riwayat (misalnya, 10)
+            if (history.length > 10) {
+                history.pop();
+            }
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+        }
+
+        /** Menghapus Semua Riwayat **/
+        window.clearHistory = function() {
+            Swal.fire({
+                title: 'Konfirmasi Hapus Riwayat',
+                text: "Anda yakin ingin menghapus semua riwayat top up?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#EE4D2D',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Ya, Hapus Semua'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.removeItem(STORAGE_KEY);
+                    renderHistory();
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Semua riwayat telah dihapus.',
+                        icon: 'success',
+                        confirmButtonColor: '#EE4D2D'
+                    });
+                }
+            });
+        }
+
+        /** Menampilkan Riwayat dan Menghitung Total Saldo **/
+        function renderHistory() {
+            const historyList = document.getElementById('history-list');
+            const saldoValue = document.getElementById('saldo-value');
+            const clearBtn = document.getElementById('clear-history-btn');
+            historyList.innerHTML = '';
+            
+            const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            let totalSaldo = 0; 
+
+            if (history.length === 0) {
+                historyList.innerHTML = '<li>Belum ada riwayat top up.</li>';
+                saldoValue.textContent = formatRupiah(0);
+                clearBtn.style.display = 'none'; 
+                return;
+            }
+
+            clearBtn.style.display = 'block'; 
+
+            history.forEach(item => {
+                const li = document.createElement('li');
+                
+                // Tampilkan Nominal Top Up, Admin Fee, dan Total Pembayaran
+                const totalDisplay = formatRupiah(item.nominalValue) + 
+                                     ' (+Admin ' + formatRupiah(item.adminFee) + 
+                                     ') = ' + formatRupiah(item.totalPayment);
+
+                li.innerHTML = `<span>${totalDisplay}</span> <span>${item.time}</span>`;
+                historyList.appendChild(li);
+
+                // Hitung total saldo (hanya nominal top up yang ditambahkan)
+                totalSaldo += Math.abs(parseInt(item.nominalValue) || 0);
+            });
+
+            // Format dan tampilkan total saldo
+            saldoValue.textContent = formatRupiah(totalSaldo);
+        }
+
+        /** Fungsi Utama untuk WhatsApp **/
+        window.kirimWhatsApp = function() {
+            const nominalInput = document.getElementById('nominal');
+            const nominal = parseInt(nominalInput.value); 
+            const phoneNumber = '628972577773';
+            
+            // Validasi Input
+            if (!nominal || nominal < MIN_NOMINAL) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Input Salah',
+                    text: `Mohon masukkan nominal top up yang valid (minimal ${formatRupiah(MIN_NOMINAL)}).`,
+                    confirmButtonColor: '#EE4D2D'
+                });
+                return;
+            }
+
+            // Hitung Biaya Admin dan Total Pembayaran
+            const adminFee = calculateAdminFee(nominal);
+            const totalPayment = nominal + adminFee;
+            
+            // Simpan ke Riwayat sebelum redirect
+            saveHistory(nominal, adminFee, totalPayment);
+
+            // Format Rupiah untuk Pesan WA
+            const nominalRupiah = formatRupiah(nominal);
+            const adminRupiah = formatRupiah(adminFee);
+            const totalRupiah = formatRupiah(totalPayment);
+
+            // Teks Otomatis untuk WhatsApp
+            const message = `Halo kak, saya ingin mengisi Shopeepay driver dengan rincian:\nNominal Top Up: ${nominalRupiah}\nBiaya Admin: ${adminRupiah}\nTotal Pembayaran: ${totalRupiah}`;
+            
+            // Encode teks dan buat URL
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappURL = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+            
+            // Kosongkan input setelah berhasil dan update terbilang/riwayat
+            nominalInput.value = '';
+            updateTerbilang(); 
+            renderHistory();
+
+            // Arahkan ke URL WhatsApp
+            window.location.href = whatsappURL;
+        }
+
+        // Jalankan saat halaman dimuat
+        window.onload = function() {
+            renderHistory();
+            updateTerbilang(); 
+        };
+    </script>
+
+</body>
+</html>
