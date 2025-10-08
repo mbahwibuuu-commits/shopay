@@ -7,46 +7,62 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* WARNA UTAMA */
+    :root {
+      --shopeefood-orange: #EE4D2D;
+      --shopeefood-light-orange: #FF7043;
+      --shopeefood-dark-orange: #CC3D20;
+      --delete-red: #D9534F; /* Warna merah untuk tombol hapus */
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #fffaf5;
       display: flex;
+      padding-top: 55px; /* Jarak untuk navbar fixed */
     }
      
-    :root {
-            --shopeefood-orange: #EE4D2D;
-            --shopeefood-light-orange: #FF7043;
-            --shopeefood-dark-orange: #CC3D20;
-            --delete-red: #D9534F; /* Warna merah untuk tombol hapus */
-        }
-    /* Navbar (Menu Home) */
-        .navbar {
-            background-color: var(--shopeefood-orange);
-            width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-        }
-        .navbar a {
-            color: white;
-            padding: 15px 20px;
-            text-decoration: none;
-            display: inline-block;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-        .navbar a:hover {
-            background-color: var(--shopeefood-dark-orange);
-        }
+    /* --- NAVBAR (MENU UTAMA) --- */
+    .navbar {
+      background-color: var(--shopeefood-orange);
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      display: flex; /* Menggunakan flexbox untuk ikon */
+      justify-content: space-around;
+    }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column; /* Ikon di atas teks */
+      align-items: center;
+      padding: 5px 0; /* Padding vertikal lebih kecil */
+      font-weight: bold;
+      font-size: 10px; /* Ukuran teks kecil untuk mobile */
+      transition: background-color 0.3s;
+      flex-grow: 1; /* Agar membagi ruang sama rata */
+      min-width: 0; /* Untuk mengatasi overflow di flex item */
+    }
+    .navbar a i {
+        font-size: 20px; /* Ukuran ikon */
+        margin-bottom: 3px;
+    }
+    .navbar a:hover {
+        background-color: var(--shopeefood-dark-orange);
+    }
+    /* --- AKHIR NAVBAR --- */
 
     .content {
       margin: auto;
-      padding: 20px;
+      padding: 20px 15px; /* Padding samping lebih kecil di mobile */
       width: 100%;
       max-width: 520px;
+      box-sizing: border-box;
     }
     .card {
       background: #fff;
@@ -56,7 +72,7 @@
     }
     h2 {
       text-align: center;
-      color: #ff6600;
+      color: var(--shopeefood-orange);
       margin-top: 0;
     }
     label {
@@ -70,6 +86,7 @@
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 14px;
+      box-sizing: border-box;
     }
     textarea[readonly] {
       background: #f9f9f9;
@@ -77,7 +94,7 @@
     }
     button {
       width: 100%;
-      background: #ff6600;
+      background: var(--shopeefood-orange);
       border: none;
       padding: 12px;
       color: #fff;
@@ -85,6 +102,10 @@
       border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
+      transition: background 0.3s;
+    }
+    button:hover {
+        background: var(--shopeefood-dark-orange);
     }
     .info {
       text-align: center;
@@ -92,14 +113,14 @@
       font-weight: bold;
     }
     .jumlah {
-      color: #ff6600;
+      color: var(--shopeefood-orange);
       font-size: 20px;
     }
     .tarif-total {
       text-align: center;
       margin-top: 10px;
       font-size: 18px;
-      color: #ff3300;
+      color: var(--shopeefood-dark-orange);
     }
     #map {
       margin-top: 15px;
@@ -116,7 +137,7 @@
     }
     .riwayat h3 {
       margin-bottom: 10px;
-      color: #ff6600;
+      color: var(--shopeefood-orange);
     }
     .riwayat-item {
       background: #fff7f2;
@@ -125,26 +146,34 @@
       border-radius: 8px;
       margin-bottom: 8px;
       font-size: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .riwayat-item > * {
+        margin-bottom: 4px;
+    }
+    .riwayat-item a {
+        color: var(--shopeefood-dark-orange);
+        text-decoration: none;
     }
     .riwayat-item button {
       margin-top: 6px;
       padding: 4px 8px;
       font-size: 12px;
-      background: #ff3300;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
+      background: var(--delete-red);
+      width: auto;
+      align-self: flex-start;
     }
     #jam-digital {
       position: fixed;
       top: 10px;
       right: 10px;
-      background: #ff6600;
+      background: var(--shopeefood-dark-orange);
       color: white;
-      font-size: 18px;
+      font-size: 14px; /* Ukuran lebih kecil agar tidak terlalu menonjol */
       font-weight: bold;
-      padding: 8px 12px;
+      padding: 5px 8px;
       border-radius: 8px;
       font-family: monospace;
       z-index: 9999;
@@ -152,12 +181,21 @@
   </style>
 </head>
 <body>
-	<div class="navbar">
-        <a href="sopay.html"><i class="fa-solid fa-wallet"></i> Klik Top-Up</a>
-    
-	
-        <a href="https://drivermager.ct.ws/index.php"><i class="fa-solid fa-comments"></i> CHAT</a>
+    <div class="navbar">
+        <a href="https://mbahwibuuu-commits.github.io/shopay/index.html">
+            <i class="fa-solid fa-home"></i> Home
+        </a>
+        <a href="https://mbahwibuuu-commits.github.io/shopay/shopay.html">
+            <i class="fa-solid fa-wallet"></i> Top Up
+        </a>
+        <a href="https://drivermager.ct.ws/index.php">
+            <i class="fa-solid fa-comments"></i> Chat
+        </a>
+        <a href="https://drivermager.ct.ws/cs.php">
+            <i class="fa-solid fa-user-gear"></i> Input CS
+        </a>
     </div>
+
   <div class="content">
     <div id="jam-digital"></div>
     <div class="card">
@@ -235,10 +273,14 @@
       return nomor;
     }
 
+    // Perbaikan sensor: 4 depan disensor
     function sensorNomor(nomor) {
-      return nomor.substring(0, 4) + "****";
+      if (!nomor || nomor.length < 5) return nomor;
+      // Menampilkan 4 digit depan, sisanya *****
+      return nomor.substring(0, 4) + "****" + nomor.substring(nomor.length - 2); 
     }
 
+    // Perbaikan sensor: 2 depan ditampilkan, sisanya disensor
     function sensorNama(nama) {
       if (!nama) return "#";
       let bersih = nama.trim().split(" ")[0];
@@ -275,7 +317,8 @@
       let longitude = document.getElementById("longitude").value;
 
       if (jenis === "info") {
-        pesan += `\n\nLokasi saya: https://www.google.com/maps?q=${latitude},${longitude}`;
+        // PERBAIKAN: Format link Google Maps
+        pesan += `\n\nLokasi saya: https://maps.google.com/maps?q=${latitude},${longitude}`;
       }
 
       let phone = nomor.replace(/\D/g, '');
@@ -283,11 +326,10 @@
       if (phone.startsWith('62')) phone = phone.substring(2);
 
       let encodedMsg = encodeURIComponent(pesan);
-      let waBusinessUrl = "whatsapp-business://send?phone=62" + phone + "&text=" + encodedMsg;
-      let fallbackUrl = "https://api.whatsapp.com/send?phone=62" + phone + "&text=" + encodedMsg;
+      // PERBAIKAN: Menggunakan format standar wa.me
+      let waUrl = `https://wa.me/62${phone}?text=${encodedMsg}`;
 
-      window.location.href = waBusinessUrl;
-      setTimeout(() => { window.location.href = fallbackUrl; }, 1000);
+      window.open(waUrl, '_blank'); // Buka di tab baru
 
       let order = {
         nomor, nama, tarif, latitude, longitude,
@@ -312,10 +354,8 @@
       if (phone.startsWith('0')) phone = phone.substring(1);
       if (phone.startsWith('62')) phone = phone.substring(2);
       let msg = encodeURIComponent(`Halo, permisi kak ${nama}`);
-      let waBusinessUrl = "whatsapp-business://send?phone=62" + phone + "&text=" + msg;
-      let fallbackUrl = "https://api.whatsapp.com/send?phone=62" + phone + "&text=" + msg;
-      window.location.href = waBusinessUrl;
-      setTimeout(() => { window.location.href = fallbackUrl; }, 1000);
+      let waUrl = `https://wa.me/62${phone}?text=${msg}`;
+      window.open(waUrl, '_blank');
     }
 
     function renderRiwayat() {
@@ -333,12 +373,21 @@
         let namaTampil = sensorNama(r.nama);
         let div = document.createElement("div");
         div.className = "riwayat-item";
+        
+        let linkLokasi = (r.latitude && r.longitude) 
+            ? `<a href="https://maps.google.com/maps?q=${r.latitude},${r.longitude}" target="_blank">Lihat Lokasi</a>`
+            : "Lokasi tidak tersedia";
+
         div.innerHTML = `
-          <b>${i+1}.</b> <i class="fas fa-phone"></i> 
-          <a href="javascript:void(0)" onclick="openWAFromRiwayat('${r.nomor}','${r.nama}')">${nomorTampil}</a> - ${namaTampil}
-          <div><i class="fas fa-money-bill-wave"></i> Rp${Number(r.tarif).toLocaleString("id-ID")}</div>
-          <div><i class="fas fa-calendar-day"></i> ${r.tanggal} <i class="fas fa-clock"></i> ${r.waktu}</div>
-          <div><i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps?q=${r.latitude},${r.longitude}" target="_blank">Lihat Lokasi</a></div>
+          <span><b>${i+1}.</b> <i class="fas fa-phone"></i> 
+          <a href="javascript:void(0)" onclick="openWAFromRiwayat('${r.nomor}','${r.nama}')">${nomorTampil}</a> - ${namaTampil}</span>
+          
+          <span style="font-weight: bold;"><i class="fas fa-money-bill-wave"></i> Rp${Number(r.tarif).toLocaleString("id-ID")}</span>
+          
+          <span style="font-size: 12px; color: #555;"><i class="fas fa-calendar-day"></i> ${r.tanggal} <i class="fas fa-clock"></i> ${r.waktu}</span>
+          
+          <span style="font-size: 12px; color: #555;"><i class="fas fa-map-marker-alt"></i> ${linkLokasi}</span>
+          
           <button onclick="hapusRiwayat(${i})"><i class="fas fa-trash"></i> Hapus</button>
         `;
         list.appendChild(div);
@@ -347,13 +396,14 @@
       document.getElementById("total_tarif").innerText = totalTarif.toLocaleString("id-ID");
     }
 
+    // GeoLocation dan Map
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(pos => {
         document.getElementById('latitude').value = pos.coords.latitude;
         document.getElementById('longitude').value = pos.coords.longitude;
         document.getElementById('map').innerHTML =
           `<iframe width='100%' height='250' style='border:0;border-radius:12px;' loading='lazy' allowfullscreen 
-            src='https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}&hl=id&z=15&output=embed'></iframe>`;
+            src='https://maps.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}&hl=id&z=15&output=embed'></iframe>`;
       }, err => {
         document.getElementById('map').textContent = "Gagal ambil lokasi: " + err.message;
       });
@@ -370,4 +420,3 @@
   </script>
 </body>
 </html>
-
