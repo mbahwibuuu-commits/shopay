@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Space Adventurer тЭдя╕П</title>
+<style>
+  * {margin:0;padding:0;box-sizing:border-box;}
+  html,body {height:100%;overflow:hidden;background:#000;}
+  canvas {
+    width:100vw;height:100vh;display:block;
+    background:url('x.jpg') center/cover no-repeat;
+    touch-action:none;
+  }
+  #overlay {
+    position:absolute;inset:0;display:flex;
+    flex-direction:column;justify-content:center;align-items:center;
+    background:rgba(0,0,0,0.85);color:#fff;font-family:Arial,sans-serif;
+  }
+  #overlay button {
+    background:#28a745;color:#fff;border:none;
+    padding:14px 28px;border-radius:12px;
+    font-size:20px;margin-top:20px;
+  }
+</style>
+</head>
+<body>
+<div id="overlay">
+  <h1>ЁЯЪА Space Adventurer тЭдя╕П</h1>
+  <button id="startBtn">Mulai Game</button>
+</div>
+<canvas id="game"></canvas>
+
+<script>
+const cvs = document.getElementById('game');
+const ctx = cvs.getContext('2d');
+const overlay = document.getElementById('overlay');
+const startBtn = document.getElementById('startBtn');
+cvs.width = innerWidth;
+cvs.height = innerHeight;
+
+// ======== GAMBAR ========
+const shipImg = new Image(); shipImg.src='A.jpg';
+const enemyImgs = ['B.jpg','C.jpg','D.jpg','E.jpg','F.jpg'].map(src=>{const i=new Image();i.src=src;return i;});
+const fastImg = new Image(); fastImg.src='G.jpg';
+
+// ======== SUARA aman ========
+const shootSfx = new Audio('shoot.mp3');
+const boomSfx = new Audio('boom.mp3');
+const bgm = new Audio('music.mp3'); bgm.loop=true; bgm.volume=0.4;
+let audioEnabled=false;
+
+// ======== VARIABEL ========
+let ship={x:cvs.width/2-30,y:cvs.height-100,w:60,h:60,speed:6};
+let bullets=[], enemies=[], explosions=[];
+let score=0,lives=3,started=false,over=false;
+let moveL=false, moveR=false;
+let lastShoot=0, lastSpawn=0;
+
+// ======== KONTROL ========
+cvs.addEventListener('touchstart',e=>{
+  const x=e.touches[0].clientX;
+  if(x<innerWidth/2) moveL=true; else moveR=true;
+});
+cvs.addEventListener('touchend',()=>{moveL=false;moveR=false;});
+
+// ======== UTIL ========
+function playSound(a){
+  if(!audioEnabled) return;
+  try{
+    a.pause(); a.currentTime=0; a.play().catch(()=>{});
+  }catch{}
+}
+function drawCircleImage(img,x,y,w,h){
+  ctx.save();
+  ctx.beginPath();ctx.arc(x+w/2,y+h/2,w/2,0,Math.PI*2);ctx.clip();
+  ctx.drawImage(img,x,y,w,h);
+  ctx.restore();
+}
+
+// ======== GAME LOOP ========
+function loop(t){
+  if(!started||over) return;
+  try{
+    ctx.clearRect(0,0,cvs.width,cvs.height);
+
+    // kapal
+    if(moveL && ship.x>0) ship.x-=ship.speed;
+    if(moveR && ship.x+ship.w<cvs.width) ship.x+=ship.speed;
+    drawCircleImage(shipImg,ship.x,ship.y,ship.w,ship.h);
+
+    // auto shoot
+    if(t-lastShoot>400){ bullets.push({x:ship.x+ship.w/2-8,y:ship.y}); playSound(shootSfx); lastShoot=t; }
+
+    // spawn musuh
+    if(t-lastSpawn>1000){
+      const fast=Math.random()<0.2;
+      const img=fast?fastImg:enemyImgs[Math.floor(Math.random()*enemyImgs.length)];
+      enemies.push({x:Math.random()*(cvs.width-50),y:-60,w:60,h:60,speed:fast?5:3,img,fast});
+      lastSpawn=t;
+    }
+
+    // peluru
+    bullets=bullets.filter(b=>b.y>-10);
+    bullets.forEach(b=>{
+      b.y-=8;
+      ctx.font='20px Arial';ctx.fillText('тЭдя╕П',b.x,b.y);
+    });
+
+    // musuh
+    enemies=enemies.filter(e=>e.y<cvs.height+60);
+    enemies.forEach((e,ei)=>{
+      e.y+=e.speed; drawCircleImage(e.img,e.x,e.y,e.w,e.h);
+      bullets.forEach((b,bi)=>{
+        if(b.x>e.x && b.x<e.x+e.w && b.y>e.y && b.y<e.y+e.h){
+          bullets.splice(bi,1); enemies.splice(ei,1);
+          explosions.push({x:e.x,y:e.y,life:15});
+          playSound(boomSfx);
+          score+=e.fast?20:10;
+        }
+      });
+      if(ship.x<e.x+e.w && ship.x+ship.w>e.x && ship.y<e.y+e.h && ship.y+ship.h>e.y){
+        lives--; explosions.push({x:e.x,y:e.y,life:15}); enemies.splice(ei,1);
+        if(lives<=0){ over=true; saveScore(); bgm.pause(); }
+      }
+    });
+
+    // ledakan
+    explosions=explosions.filter(ex=>ex.life>0);
+    explosions.forEach(ex=>{
+      ctx.fillStyle=`rgba(255,200,0,${ex.life/15})`;
+      ctx.beginPath();ctx.arc(ex.x+30,ex.y+30,30-ex.life,0,Math.PI*2);
+      ctx.fill();ex.life--;
+    });
+
+    // HUD
+    ctx.fillStyle='#0f0'; ctx.font='22px Arial';
+    ctx.fillText('Score: '+score,10,28);
+    ctx.fillStyle='red'; ctx.fillText('тЭдя╕П'.repeat(lives),cvs.width-90,28);
+
+    if(over){
+      ctx.fillStyle='#fff';
+      ctx.font='30px Arial'; ctx.fillText('GAME OVER',cvs.width/2-100,cvs.height/2);
+      ctx.font='18px Arial';
+      ctx.fillText('Score: '+score,cvs.width/2-40,cvs.height/2+30);
+      const h=parseInt(localStorage.getItem('highscore')||0);
+      ctx.fillText('High Score: '+h,cvs.width/2-60,cvs.height/2+55);
+      drawHistory();
+      cvs.onclick=()=>location.reload();
+    }
+  }catch(err){
+    console.log('loop error',err);
+  }
+  requestAnimationFrame(loop);
+}
+
+// ======== SKOR ========
+function saveScore(){
+  let h=parseInt(localStorage.getItem('highscore')||0);
+  if(score>h)localStorage.setItem('highscore',score);
+  let hist=JSON.parse(localStorage.getItem('score_history')||'[]');
+  hist.unshift(score); if(hist.length>7) hist=hist.slice(0,7);
+  localStorage.setItem('score_history',JSON.stringify(hist));
+}
+function drawHistory(){
+  let hist=JSON.parse(localStorage.getItem('score_history')||'[]');
+  ctx.fillStyle='yellow'; ctx.font='16px Arial';
+  ctx.fillText('Last 7 Scores:',cvs.width/2-70,cvs.height/2+80);
+  hist.forEach((s,i)=>ctx.fillText((i+1)+'. '+s,cvs.width/2-20,cvs.height/2+100+i*20));
+}
+
+// ======== START ========
+startBtn.onclick=()=>{
+  overlay.style.display='none';
+  started=true; audioEnabled=true;
+  bgm.play().catch(()=>{});
+  requestAnimationFrame(loop);
+};
+</script>
+</body>
+</html>
