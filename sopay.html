@@ -443,7 +443,7 @@
                                      ' (+Admin ' + formatRupiah(item.adminFee) + 
                                      ') = ' + formatRupiah(item.totalPayment);
 
-                li.innerHTML = `<span>${totalDisplay}</span> <span>${item.time}</span>`;
+                li.innerHTML = `<span>${totalDisplay}</span> # <span>${item.time}</span>`;
                 historyList.appendChild(li);
 
                 // Hitung total saldo (hanya nominal top up yang ditambahkan)
