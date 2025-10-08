@@ -1,186 +1,242 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Driver_Introvert</title>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    /* WARNA UTAMA */
-    :root {
-      --shopeefood-orange: #EE4D2D;
-      --shopeefood-light-orange: #FF7043;
-      --shopeefood-dark-orange: #CC3D20;
-      --delete-red: #D9534F; /* Warna merah untuk tombol hapus */
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Driver_Introvert</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* WARNA UTAMA */
+        :root {
+            --shopeefood-orange: #EE4D2D;
+            --shopeefood-light-orange: #FF7043;
+            --shopeefood-dark-orange: #CC3D20;
+            --delete-red: #D9534F; /* Warna merah untuk tombol hapus */
+        }
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #fffaf5;
-      display: flex;
-      padding-top: 55px; /* Jarak untuk navbar fixed */
-    }
-     
-    /* --- NAVBAR (MENU UTAMA) --- */
-    .navbar {
-      background-color: var(--shopeefood-orange);
-      width: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-      display: flex; /* Menggunakan flexbox untuk ikon */
-      justify-content: space-around;
-    }
-    .navbar a {
-      color: white;
-      text-decoration: none;
-      display: flex;
-      flex-direction: column; /* Ikon di atas teks */
-      align-items: center;
-      padding: 5px 0; /* Padding vertikal lebih kecil */
-      font-weight: bold;
-      font-size: 10px; /* Ukuran teks kecil untuk mobile */
-      transition: background-color 0.3s;
-      flex-grow: 1; /* Agar membagi ruang sama rata */
-      min-width: 0; /* Untuk mengatasi overflow di flex item */
-    }
-    .navbar a i {
-        font-size: 20px; /* Ukuran ikon */
-        margin-bottom: 3px;
-    }
-    .navbar a:hover {
-        background-color: var(--shopeefood-dark-orange);
-    }
-    /* --- AKHIR NAVBAR --- */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fffaf5;
+            display: flex;
+            padding-top: 55px; /* Jarak untuk navbar fixed */
+        }
+         
+        /* ================================================= */
+        /* --- STYLE SPLASH SCREEN BARU --- */
+        /* ================================================= */
+        #initial-splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--shopeefood-orange); /* Latar belakang oranye penuh */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999; /* Pastikan di atas segalanya */
+            opacity: 1;
+            transition: opacity 1s ease-out; /* Transisi saat menghilang */
+            color: white;
+            font-family: 'Poppins', sans-serif; /* Menggunakan font yang stylish */
+        }
+        
+        /* Animasi Ikon Motor */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+            60% { transform: translateY(-7px); }
+        }
 
-    .content {
-      margin: auto;
-      padding: 20px 15px; /* Padding samping lebih kecil di mobile */
-      width: 100%;
-      max-width: 520px;
-      box-sizing: border-box;
-    }
-    .card {
-      background: #fff;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-    h2 {
-      text-align: center;
-      color: var(--shopeefood-orange);
-      margin-top: 0;
-    }
-    label {
-      font-weight: 600;
-      font-size: 14px;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0 14px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
-    textarea[readonly] {
-      background: #f9f9f9;
-      color: #555;
-    }
-    button {
-      width: 100%;
-      background: var(--shopeefood-orange);
-      border: none;
-      padding: 12px;
-      color: #fff;
-      font-weight: bold;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background 0.3s;
-    }
-    button:hover {
-        background: var(--shopeefood-dark-orange);
-    }
-    .info {
-      text-align: center;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-    .jumlah {
-      color: var(--shopeefood-orange);
-      font-size: 20px;
-    }
-    .tarif-total {
-      text-align: center;
-      margin-top: 10px;
-      font-size: 18px;
-      color: var(--shopeefood-dark-orange);
-    }
-    #map {
-      margin-top: 15px;
-      width: 100%;
-      height: 250px;
-      border-radius: 12px;
-      background: #fff3e6;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .riwayat {
-      margin-top: 20px;
-    }
-    .riwayat h3 {
-      margin-bottom: 10px;
-      color: var(--shopeefood-orange);
-    }
-    .riwayat-item {
-      background: #fff7f2;
-      border: 1px solid #ffd9b3;
-      padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 8px;
-      font-size: 14px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
-    .riwayat-item > * {
-        margin-bottom: 4px;
-    }
-    .riwayat-item a {
-        color: var(--shopeefood-dark-orange);
-        text-decoration: none;
-    }
-    .riwayat-item button {
-      margin-top: 6px;
-      padding: 4px 8px;
-      font-size: 12px;
-      background: var(--delete-red);
-      width: auto;
-      align-self: flex-start;
-    }
-    #jam-digital {
-      position: fixed;
-      top: 5px;
-      right: 10px;
-      background: var(--shopeefood-dark-orange);
-      color: white;
-      font-size: 8px; /* Ukuran lebih kecil agar tidak terlalu menonjol */
-      font-weight: bold;
-      padding: 5px 8px;
-      border-radius: 8px;
-      font-family: monospace;
-      z-index: 9999;
-    }
-  </style>
+        #splash-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite; /* Animasi bouncing */
+        }
+        
+        #splash-text {
+            font-size: 2.5em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-top: 10px;
+        }
+
+        /* Kelas untuk menyembunyikan konten utama saat splash aktif */
+        body.splash-active .content, body.splash-active .navbar {
+             visibility: hidden;
+        }
+        body.splash-active {
+            padding-top: 0;
+        }
+        
+        /* ================================================= */
+        /* --- STYLE APLIKASI UTAMA (TIDAK BERUBAH) --- */
+        /* ================================================= */
+
+        .navbar {
+            background-color: var(--shopeefood-orange);
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-around;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px 0;
+            font-weight: bold;
+            font-size: 10px;
+            transition: background-color 0.3s;
+            flex-grow: 1;
+            min-width: 0;
+        }
+        .navbar a i {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+        .navbar a:hover {
+            background-color: var(--shopeefood-dark-orange);
+        }
+
+        .content {
+            margin: auto;
+            padding: 20px 15px;
+            width: 100%;
+            max-width: 520px;
+            box-sizing: border-box;
+        }
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        h2 {
+            text-align: center;
+            color: var(--shopeefood-orange);
+            margin-top: 0;
+        }
+        label {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        textarea[readonly] {
+            background: #f9f9f9;
+            color: #555;
+        }
+        button {
+            width: 100%;
+            background: var(--shopeefood-orange);
+            border: none;
+            padding: 12px;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: var(--shopeefood-dark-orange);
+        }
+        .info {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .jumlah {
+            color: var(--shopeefood-orange);
+            font-size: 20px;
+        }
+        .tarif-total {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 18px;
+            color: var(--shopeefood-dark-orange);
+        }
+        #map {
+            margin-top: 15px;
+            width: 100%;
+            height: 250px;
+            border-radius: 12px;
+            background: #fff3e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .riwayat {
+            margin-top: 20px;
+        }
+        .riwayat h3 {
+            margin-bottom: 10px;
+            color: var(--shopeefood-orange);
+        }
+        .riwayat-item {
+            background: #fff7f2;
+            border: 1px solid #ffd9b3;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .riwayat-item > * {
+            margin-bottom: 4px;
+        }
+        .riwayat-item a {
+            color: var(--shopeefood-dark-orange);
+            text-decoration: none;
+        }
+        .riwayat-item button {
+            margin-top: 6px;
+            padding: 4px 8px;
+            font-size: 12px;
+            background: var(--delete-red);
+            width: auto;
+            align-self: flex-start;
+        }
+        #jam-digital {
+            position: fixed;
+            top: 5px;
+            right: 10px;
+            background: var(--shopeefood-dark-orange);
+            color: white;
+            font-size: 8px;
+            font-weight: bold;
+            padding: 5px 8px;
+            border-radius: 8px;
+            font-family: monospace;
+            z-index: 9999;
+        }
+    </style>
 </head>
-<body>
+<body class="splash-active">
+    
+    <div id="initial-splash">
+        <i class="fa-solid fa-motorcycle" id="splash-icon"></i> 
+        <div id="splash-text">Driver_Introvert</div>
+    </div>
     <div class="navbar">
         <a href="https://mbahwibuuu-commits.github.io/shopay/index.html">
             <i class="fa-solid fa-home"></i> Home
@@ -199,10 +255,10 @@
   <div class="content">
     <div id="jam-digital"></div>
     <div class="card">
-    	<p> </p>
+        <p> </p>
       <h2><i class="fa-solid fa-motorcycle"></i> Driver_Introvert</h2>
  <center><div class="riwayat">
- 	<h3>MagerSaveNomor</h3>
+    <h3>MagerSaveNomor</h3>
  </div></center>
       <form onsubmit="cekDuplikat(event)">
         <label>Nomor HP Customer:</label>
@@ -316,8 +372,8 @@
       let latitude = document.getElementById("latitude").value;
       let longitude = document.getElementById("longitude").value;
 
-      if (jenis === "info") {
-        // PERBAIKAN: Format link Google Maps
+      if (jenis === "info" && latitude && longitude) {
+        // Menggunakan format link Google Maps yang standar
         pesan += `\n\nLokasi saya: https://maps.google.com/maps?q=${latitude},${longitude}`;
       }
 
@@ -326,7 +382,7 @@
       if (phone.startsWith('62')) phone = phone.substring(2);
 
       let encodedMsg = encodeURIComponent(pesan);
-      // PERBAIKAN: Menggunakan format standar wa.me
+      // Menggunakan format standar wa.me
       let waUrl = `https://wa.me/62${phone}?text=${encodedMsg}`;
 
       window.open(waUrl, '_blank'); // Buka di tab baru
@@ -414,9 +470,36 @@
       document.getElementById("jam-digital").innerText =
         now.toLocaleTimeString('id-ID', { hour12: false });
     }
-    setInterval(updateJam, 1000);
-    updateJam();
-    renderRiwayat();
+    
+    // =================================================
+    // --- FUNGSI SPLASH SCREEN ---
+    // =================================================
+    window.onload = function() {
+        const splash = document.getElementById('initial-splash');
+        const body = document.body;
+        
+        // Atur durasi tampilan splash screen (misalnya 3 detik)
+        const splashDuration = 3000; 
+        const fadeDuration = 1000; // Durasi transisi opacity 1 detik
+
+        setTimeout(() => {
+            // 1. Mulai transisi opacity untuk menghilangkan splash
+            splash.style.opacity = '0';
+            
+            // 2. Setelah transisi selesai, hapus splash dan tampilkan konten utama
+            setTimeout(() => {
+                splash.style.display = 'none';
+                body.classList.remove('splash-active'); // Hapus class untuk menampilkan konten
+                body.style.paddingTop = '55px'; // Kembalikan padding body
+            }, fadeDuration);
+
+        }, splashDuration);
+        
+        // Fungsi inisialisasi aplikasi
+        setInterval(updateJam, 1000);
+        updateJam();
+        renderRiwayat();
+    };
   </script>
 </body>
 </html>
