@@ -18,7 +18,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding-top: 60px; /* Ruang untuk Navbar */
+            padding-top: 60px; /* Ruang untuk Navbar fixed */
         }
 
         /* Tema Warna Orange ala ShopeeFood */
@@ -26,30 +26,42 @@
             --shopeefood-orange: #EE4D2D;
             --shopeefood-light-orange: #FF7043;
             --shopeefood-dark-orange: #CC3D20;
-            --delete-red: #D9534F; /* Warna merah untuk tombol hapus */
+            --delete-red: #D9534F;
         }
 
-        /* Navbar (Menu Home) */
+        /* --- NAVBAR (MENU UTAMA) --- */
         .navbar {
             background-color: var(--shopeefood-orange);
             width: 100%;
             position: fixed;
             top: 0;
             left: 0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             z-index: 1000;
+            display: flex; /* Menggunakan flexbox untuk ikon */
+            justify-content: space-around;
         }
         .navbar a {
             color: white;
-            padding: 15px 20px;
             text-decoration: none;
-            display: inline-block;
+            display: flex;
+            flex-direction: column; /* Ikon di atas teks */
+            align-items: center;
+            padding: 5px 0; /* Padding vertikal lebih kecil */
             font-weight: bold;
+            font-size: 10px; /* Ukuran teks kecil untuk mobile */
             transition: background-color 0.3s;
+            flex-grow: 1; /* Agar membagi ruang sama rata */
+            min-width: 0;
+        }
+        .navbar a i {
+            font-size: 20px; /* Ukuran ikon */
+            margin-bottom: 3px;
         }
         .navbar a:hover {
             background-color: var(--shopeefood-dark-orange);
         }
+        /* --- AKHIR NAVBAR --- */
 
         .container {
             background-color: #fff;
@@ -218,9 +230,20 @@
 <body>
 
     <div class="navbar">
-        <a href="index.html"><i class="fa-solid fa-home"></i> Home</a>
-        <a href="https://drivermager.ct.ws/index.php"><i class="fa-solid fa-comments"></i> CHAT</a>
+        <a href="https://mbahwibuuu-commits.github.io/shopay/index.html">
+            <i class="fa-solid fa-home"></i> Home
+        </a>
+        <a href="https://mbahwibuuu-commits.github.io/shopay/shopay.html">
+            <i class="fa-solid fa-wallet"></i> Top Up
+        </a>
+        <a href="https://drivermager.ct.ws/index.php">
+            <i class="fa-solid fa-comments"></i> Chat
+        </a>
+        <a href="https://drivermager.ct.ws/cs.php">
+            <i class="fa-solid fa-user-gear"></i> Input CS
+        </a>
     </div>
+
     <div class="container">
         <h2><i class="fa-solid fa-wallet"></i> Top-Up ShopeePay-Driver<i class="fa-solid fa-wallet"></i> </h2>
         
